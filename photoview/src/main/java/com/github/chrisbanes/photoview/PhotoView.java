@@ -190,6 +190,10 @@ public class PhotoView extends AppCompatImageView {
         attacher.setAllowParentInterceptOnEdge(allow);
     }
 
+    public void setAllowDoubleTapToZoomOutOnly(boolean allow) {
+        attacher.setAllowDoubleTapToZoomOutOnly(allow);
+    }
+
     public void setMinimumScale(float minimumScale) {
         attacher.setMinimumScale(minimumScale);
     }

@@ -62,6 +62,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
+    private boolean mDoubleTapToZoomOutOnly = false;
 
     private ImageView mImageView;
 
@@ -227,13 +228,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float scale = getScale();
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (scale < getMediumScale()) {
-                        setScale(getMediumScale(), x, y, true);
-                    } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
-                        setScale(getMaximumScale(), x, y, true);
+
+                    if (mDoubleTapToZoomOutOnly) {
+                        if (scale < getMaximumScale()) {
+                            setScale(getMinimumScale(), x, y, true);
+                        } else {
+                            handleDefaultDoubleTapBehavior(scale, x, y);
+                        }
                     } else {
-                        setScale(getMinimumScale(), x, y, true);
+                        handleDefaultDoubleTapBehavior(scale, x, y);
                     }
+
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // Can sometimes happen when getX() and getY() is called
                 }
@@ -246,6 +251,16 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 return false;
             }
         });
+    }
+
+    private void handleDefaultDoubleTapBehavior(float scale, float x, float y) {
+        if (scale < getMediumScale()) {
+            setScale(getMediumScale(), x, y, true);
+        } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
+            setScale(getMaximumScale(), x, y, true);
+        } else {
+            setScale(getMinimumScale(), x, y, true);
+        }
     }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
@@ -386,6 +401,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
+    }
+
+    public void setAllowDoubleTapToZoomOutOnly(boolean allow) {
+        this.mDoubleTapToZoomOutOnly = allow;
     }
 
     public void setMinimumScale(float minimumScale) {

@@ -139,6 +139,8 @@ public class SimpleSampleActivity extends AppCompatActivity {
         mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
         mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
         mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+
+        mPhotoView.setAllowDoubleTapToZoomOutOnly(true);
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
