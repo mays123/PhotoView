@@ -230,13 +230,20 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float y = ev.getY();
 
                     if (mDoubleTapToZoomOutOnly) {
-                        if (scale < getMaximumScale()) {
-                            setScale(getMinimumScale(), x, y, true);
+                        if (scale == getMinimumScale()) {
+                            return false;
                         } else {
-                            handleDefaultDoubleTapBehavior(scale, x, y);
+                            setScale(getMinimumScale(), x, y, true);
                         }
                     } else {
-                        handleDefaultDoubleTapBehavior(scale, x, y);
+                        //default behavior
+                        if (scale < getMediumScale()) {
+                            setScale(getMediumScale(), x, y, true);
+                        } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
+                            setScale(getMaximumScale(), x, y, true);
+                        } else {
+                            setScale(getMinimumScale(), x, y, true);
+                        }
                     }
 
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -251,16 +258,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 return false;
             }
         });
-    }
-
-    private void handleDefaultDoubleTapBehavior(float scale, float x, float y) {
-        if (scale < getMediumScale()) {
-            setScale(getMediumScale(), x, y, true);
-        } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
-            setScale(getMaximumScale(), x, y, true);
-        } else {
-            setScale(getMinimumScale(), x, y, true);
-        }
     }
 
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
